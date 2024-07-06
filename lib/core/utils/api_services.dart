@@ -1,4 +1,4 @@
-import 'package:bookly/core/utils/constants.dart';
+import 'package:bookly/constants.dart';
 import 'package:dio/dio.dart';
 
 class ApiServices {
