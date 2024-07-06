@@ -3,7 +3,6 @@ import 'package:bookly/core/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 import 'custom_search_text_field.dart';
 
 class SearchViewBody extends StatelessWidget {
