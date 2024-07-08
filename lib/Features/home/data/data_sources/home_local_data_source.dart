@@ -3,16 +3,23 @@ import 'package:bookly/constants.dart';
 import 'package:hive/hive.dart';
 
 abstract class HomeLocalDataSource {
-  List<BookEntity> fetchFeaturedBooks();
+  List<BookEntity> fetchFeaturedBooks({int startIndex = 0});
   List<BookEntity> fetchNewestBooks();
   List<BookEntity> fetchSimilarBooks({required String category});
 }
 
 class HomeLocalDataSourceImpl implements HomeLocalDataSource {
   @override
-  List<BookEntity> fetchFeaturedBooks() {
+  List<BookEntity> fetchFeaturedBooks({int startIndex = 0}) {
+    int start = startIndex * 10;
+    int end = (startIndex + 1) * 10;
     var box = Hive.box<BookEntity>(featuredBooksBox);
-    List<BookEntity> books = box.values.toList();
+    int length = box.length;
+    if (length <= start || length > end) {
+      return [];
+    }
+
+    List<BookEntity> books = box.values.toList().sublist(start, end);
     if (books.isEmpty) {
       return [];
     }
