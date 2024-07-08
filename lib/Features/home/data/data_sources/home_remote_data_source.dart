@@ -7,6 +7,7 @@ import 'package:bookly/core/utils/functions/cache_books_data.dart';
 abstract class HomeRemoteDataSource {
   Future<List<BookEntity>> fetchFeaturedBooks();
   Future<List<BookEntity>> fetchNewestBooks();
+  Future<List<BookEntity>> fetchSimilarBooks({required String category});
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -15,8 +16,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   HomeRemoteDataSourceImpl(this._apiServices);
   @override
   Future<List<BookEntity>> fetchFeaturedBooks() async {
-    var response =
-        await _apiServices.get("?q=programming&key=$apiKey=free-ebooks");
+    var response = await _apiServices.get("?q=random&key=$apiKey");
     List<BookEntity> books = getBooksList(response);
     await cacheBooksData(books, featuredBooksBox);
     return books;
@@ -24,10 +24,18 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
 
   @override
   Future<List<BookEntity>> fetchNewestBooks() async {
-    var response = await _apiServices
-        .get("?q=programming&orderBy=newest&key=$apiKey=free-ebooks");
+    var response = await _apiServices.get("?q=random&key=$apiKey&orderBy=newest");
     List<BookEntity> books = getBooksList(response);
     await cacheBooksData(books, newestBooksBox);
+    return books;
+  }
+
+  @override
+  Future<List<BookEntity>> fetchSimilarBooks({required String category}) async {
+    var response =
+        await _apiServices.get("?q=$category&key=$apiKey&orderBy=relevance");
+    List<BookEntity> books = getBooksList(response);
+    await cacheBooksData(books, similarBooksBox);
     return books;
   }
 
