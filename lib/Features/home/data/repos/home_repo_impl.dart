@@ -13,14 +13,19 @@ class HomeRepoImpl implements HomeRepo {
   HomeRepoImpl(this.homeRemoteDataSource, this.homeLocalDataSource);
 
   @override
-  Future<Either<Failure, List<BookEntity>>> fetchFeaturedBooks() async {
+  Future<Either<Failure, List<BookEntity>>> fetchFeaturedBooks(
+      {int startIndex = 0}) async {
     List<BookEntity> booksList = [];
     try {
-      booksList = homeLocalDataSource.fetchFeaturedBooks();
+      booksList =
+          homeLocalDataSource.fetchFeaturedBooks(startIndex: startIndex);
       if (booksList.isNotEmpty) {
         return Right(booksList);
       }
-      booksList = await homeRemoteDataSource.fetchFeaturedBooks();
+      booksList = await homeRemoteDataSource.fetchFeaturedBooks(
+          startIndex: startIndex 
+      )
+      ;
       return Right(booksList);
     } on DioException catch (e) {
       return Left(ServerFailure.fromDioException(e));
@@ -33,10 +38,10 @@ class HomeRepoImpl implements HomeRepo {
   Future<Either<Failure, List<BookEntity>>> fetchNewestBooks() async {
     List<BookEntity> booksList = [];
     try {
-      booksList = homeLocalDataSource.fetchNewestBooks();
-      if (booksList.isNotEmpty) {
-        return Right(booksList);
-      }
+      // booksList = homeLocalDataSource.fetchNewestBooks();
+      // if (booksList.isNotEmpty) {
+      //   return Right(booksList);
+      // }
       booksList = await homeRemoteDataSource.fetchNewestBooks();
       return Right(booksList);
     } on DioException catch (e) {
@@ -51,12 +56,14 @@ class HomeRepoImpl implements HomeRepo {
       {required String category}) async {
     List<BookEntity> booksList = [];
     try {
-     
+      // booksList = homeLocalDataSource.fetchSimilarBooks();
+      // if (booksList.isNotEmpty) {
+      //   return Right(booksList);
+      // }
       booksList =
           await homeRemoteDataSource.fetchSimilarBooks(category: category);
       return Right(booksList);
     } on DioException catch (e) {
-      
       return Left(ServerFailure.fromDioException(e));
     } catch (e) {
       return Left(ServerFailure(errorMessage: e.toString()));
