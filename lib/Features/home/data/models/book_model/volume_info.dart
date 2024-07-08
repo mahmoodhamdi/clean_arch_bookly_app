@@ -1,4 +1,5 @@
 import 'image_links.dart';
+import 'industry_identifier.dart';
 import 'panelization_summary.dart';
 import 'reading_modes.dart';
 
@@ -6,9 +7,11 @@ class VolumeInfo {
   String? title;
   List<String>? authors;
   String? publishedDate;
+  List<IndustryIdentifier>? industryIdentifiers;
   ReadingModes? readingModes;
-  num? pageCount;
-  String? prnumType;
+  int? pageCount;
+  String? printType;
+  List<String>? categories;
   String? maturityRating;
   bool? allowAnonLogging;
   String? contentVersion;
@@ -23,9 +26,11 @@ class VolumeInfo {
     this.title,
     this.authors,
     this.publishedDate,
+    this.industryIdentifiers,
     this.readingModes,
     this.pageCount,
-    this.prnumType,
+    this.printType,
+    this.categories,
     this.maturityRating,
     this.allowAnonLogging,
     this.contentVersion,
@@ -39,14 +44,22 @@ class VolumeInfo {
 
   factory VolumeInfo.fromJson(Map<String, dynamic> json) => VolumeInfo(
         title: json['title'] as String?,
-        authors: json['authors'] as List<String>?,
+        authors: (json['authors'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList(),
         publishedDate: json['publishedDate'] as String?,
+        industryIdentifiers: (json['industryIdentifiers'] as List<dynamic>?)
+            ?.map((e) => IndustryIdentifier.fromJson(e as Map<String, dynamic>))
+            .toList(),
         readingModes: json['readingModes'] == null
             ? null
             : ReadingModes.fromJson(
                 json['readingModes'] as Map<String, dynamic>),
-        pageCount: json['pageCount'] as num?,
-        prnumType: json['prnumType'] as String?,
+        pageCount: json['pageCount'] as int?,
+        printType: json['printType'] as String?,
+        categories: (json['categories'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList(),
         maturityRating: json['maturityRating'] as String?,
         allowAnonLogging: json['allowAnonLogging'] as bool?,
         contentVersion: json['contentVersion'] as String?,
@@ -67,9 +80,12 @@ class VolumeInfo {
         'title': title,
         'authors': authors,
         'publishedDate': publishedDate,
+        'industryIdentifiers':
+            industryIdentifiers?.map((e) => e.toJson()).toList(),
         'readingModes': readingModes?.toJson(),
         'pageCount': pageCount,
-        'prnumType': prnumType,
+        'printType': printType,
+        'categories': categories,
         'maturityRating': maturityRating,
         'allowAnonLogging': allowAnonLogging,
         'contentVersion': contentVersion,
